@@ -45,8 +45,8 @@ public class Main {
 			System.out.println("neco jineho - Ukonceni programu");
 			
 			
-			int tmp = pouzeCelaCisla(sc);
-			switch(tmp) {
+			int choice = pouzeCelaCisla(sc);
+			switch (choice) {
 				case 1: //TODO Vytvoreni studenta
 					System.out.println("1 - Vytvoreni nove databaze");
 					break;
