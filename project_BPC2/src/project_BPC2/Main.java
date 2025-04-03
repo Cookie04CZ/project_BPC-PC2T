@@ -33,41 +33,56 @@ public class Main {
 		while (run) {
 			System.out.println("\n====Vyberte moznost====");
 			System.out.println("1 - Vytvoreni nove databaze");
-			System.out.println("2 - Vlozeni noveho studenta");
-			System.out.println("3 - Vypsani studenta\n");
+			System.out.println("2 - Zadani znamky studentovi");
+			System.out.println("3 - Terminace studenta");
+			System.out.println("4 - Vypis informaci o studentovi podle ID");
+			System.out.println("5 - Vypis vsech studentu razeny dle prijmeni");
+			System.out.println("6 - Vypis obecneho studijniho prumeru");
+			System.out.println("7 - Vypis poctu studentu ve skupinach");
+			System.out.println("8 - Nacteni studenta ze souboru");
+			System.out.println("9 - Odstraneni studenta ze souboru");
 			System.out.println("0 - Ukonceni programu");
+			
 			
 			int tmp = pouzeCelaCisla(sc);
 			switch(tmp) {
-				case 1:
-					System.out.println("Databaze byla vytvorena!");
+				case 1: //TODO Vytvoreni studenta
+					System.out.println("1 - Vytvoreni nove databaze");
 					break;
-				case 2:
-					System.out.println("\n====Vyberte do jakeho oboru student patri====");
-					System.out.println("1 - Telekomunikace");
-					System.out.println("2 - To druhy");
-					
-					int tmp2 = sc.nextInt();
-					switch(tmp2) {
-						case 1:
-							System.out.println("VYBRANO: TELEKOMUNIKACE");
-							newDatabase.setStudent(tmp2);
-							break;
-						case 2:
-							System.out.println("VYBRANO: KYBERBEZPECNOST");
-							newDatabase.setStudent(tmp2);
-							break;
-					}
+
+				case 2: //TODO Zadani znamky studentovi
+					System.out.println("2 - Zadani znamky studentovi");
 					break;
 					
-				case 3:
-					System.out.println("Databaze byla vytvorena!");
+				case 3: //TODO Terminace studenta z databaze
+					System.out.println("3 - Terminace studenta");
 					break;
 				
+				case 4: //TODO Vypis podle ID
+					System.out.println("4 - Vypis informaci o studentovi podle ID");
+					break;
+					
+				case 5: //TODO Vypis vsech se razenim
+					System.out.println("5 - Vypis vsech studentu razeny dle prijmeni");
+					break;
+					
+				case 6: //TODO Vypis studijnich prumeru
+					System.out.println("6 - Vypis obecneho studijniho prumeru");
+					break;
+					
+				case 7: //TODO Vypis poctu studentu
+					System.out.println("7 - Vypis poctu studentu ve skupinach");
+					break;
+					
+				case 8: //TODO Nacitani ze souboru
+					System.out.println("8 - Nacteni studenta ze souboru");
+					break;
+					
+				case 9: //TODO Odstraneni ze souboru
+					System.out.println("9 - Odstraneni studenta ze souboru");
+					break;
 				
-				
-				
-				case 0:
+				case 0: //Ukonceni aplikace
 					System.out.println("==== APLIKACE UKONCENA ====");
 					run = false;
 					break;
