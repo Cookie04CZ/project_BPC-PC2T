@@ -21,7 +21,7 @@ public class Databaze {
 		int birth = Main.pouzeCelaCisla(sc);
 		int branch = tmp2;
 		int ID = 0;
-		prvkyDatabaze[posledniStudent++] = new Student(ID, name, surname, birth, branch);
+		//prvkyDatabaze[posledniStudent++] = new Student(ID, name, surname, birth, branch);
 	}
 	
 }

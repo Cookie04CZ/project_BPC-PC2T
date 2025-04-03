@@ -1,18 +1,16 @@
 package project_BPC2;
 
-public class Student {
+public abstract class Student {
 	private int ID;
     private String name;
     private String surname;
     private int birth;
     private int branch;
 
-    public Student(int ID, String name, String surname, int birth, int branch) {
-    	this.ID = ID;
+    public Student(String name, String surname, int birth) {
         this.name = name;
         this.surname = surname;
         this.birth = birth;
-        this.branch = branch;
     }
     
     public String getName()
