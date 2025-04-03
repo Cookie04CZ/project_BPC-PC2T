@@ -36,12 +36,13 @@ public class Main {
 			System.out.println("2 - Zadani znamky studentovi");
 			System.out.println("3 - Terminace studenta");
 			System.out.println("4 - Vypis informaci o studentovi podle ID");
-			System.out.println("5 - Vypis vsech studentu razeny dle prijmeni");
-			System.out.println("6 - Vypis obecneho studijniho prumeru");
-			System.out.println("7 - Vypis poctu studentu ve skupinach");
-			System.out.println("8 - Nacteni studenta ze souboru");
-			System.out.println("9 - Odstraneni studenta ze souboru");
-			System.out.println("0 - Ukonceni programu");
+			System.out.println("5 - Studentova dovednost");
+			System.out.println("6 - Vypis vsech studentu razeny dle prijmeni");
+			System.out.println("7 - Vypis obecneho studijniho prumeru");
+			System.out.println("8 - Vypis poctu studentu ve skupinach");
+			System.out.println("9 - Nacteni studenta ze souboru");
+			System.out.println("0 - Odstraneni studenta ze souboru");
+			System.out.println("neco jineho - Ukonceni programu");
 			
 			
 			int tmp = pouzeCelaCisla(sc);
@@ -62,33 +63,34 @@ public class Main {
 					System.out.println("4 - Vypis informaci o studentovi podle ID");
 					break;
 					
-				case 5: //TODO Vypis vsech se razenim
-					System.out.println("5 - Vypis vsech studentu razeny dle prijmeni");
+				case 5: //TODO Dovednost studetna
+					System.out.println("5 - Spusteni dovednosti studenta");
 					break;
 					
-				case 6: //TODO Vypis studijnich prumeru
-					System.out.println("6 - Vypis obecneho studijniho prumeru");
+				case 6: //TODO Vypis vsech se razenim
+					System.out.println("6 - Vypis vsech studentu razeny dle prijmeni");
 					break;
 					
-				case 7: //TODO Vypis poctu studentu
-					System.out.println("7 - Vypis poctu studentu ve skupinach");
+				case 7: //TODO Vypis studijnich prumeru
+					System.out.println("7 - Vypis obecneho studijniho prumeru");
 					break;
 					
-				case 8: //TODO Nacitani ze souboru
-					System.out.println("8 - Nacteni studenta ze souboru");
+				case 8: //TODO Vypis poctu studentu
+					System.out.println("8 - Vypis poctu studentu ve skupinach");
 					break;
 					
-				case 9: //TODO Odstraneni ze souboru
-					System.out.println("9 - Odstraneni studenta ze souboru");
+				case 9: //TODO Nacitani ze souboru
+					System.out.println("9 - Nacteni studenta ze souboru");
 					break;
-				
-				case 0: //Ukonceni aplikace
-					System.out.println("==== APLIKACE UKONCENA ====");
-					run = false;
+					
+				case 0: //TODO Odstraneni ze souboru
+					System.out.println("0 - Odstraneni studenta ze souboru");
 					break;
 					
 				default:
-					System.out.println("Výběr neexistuje, zadej cislo znovu");
+					System.out.println("==== APLIKACE UKONCENA ====");
+					run = false;
+					break;
 			}
 		}
 		
