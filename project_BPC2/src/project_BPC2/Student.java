@@ -5,7 +5,6 @@ public abstract class Student {
     private String name;
     private String surname;
     private int birth;
-    private int branch;
 
     public Student(String name, String surname, int birth) {
         this.name = name;
@@ -23,8 +22,6 @@ public abstract class Student {
 		return surname;
 	}
 	
-	public int getBranch()
-	{
-		return branch;
+	public void applySkill(){
 	}
 }
