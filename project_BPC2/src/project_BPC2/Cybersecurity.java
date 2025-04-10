@@ -7,6 +7,7 @@ class Cybersecurity extends Student{
 		// TODO Auto-generated constructor stub
 	}
 
+	//TODO napsat kod na hashovani
 	public void generateHash() {
 		System.out.println("Hash brasko");
 	}
