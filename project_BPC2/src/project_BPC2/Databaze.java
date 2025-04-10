@@ -19,9 +19,8 @@ public class Databaze {
 		String name = sc.next();
 		String surname = sc.next();
 		int birth = Main.pouzeCelaCisla(sc);
-		int branch = tmp2;
 		int ID = 0;
-		//prvkyDatabaze[posledniStudent++] = new Student(ID, name, surname, birth, branch);
+		prvkyDatabaze[posledniStudent++] = new Student(ID, name, surname, birth);
 	}
 	
 }

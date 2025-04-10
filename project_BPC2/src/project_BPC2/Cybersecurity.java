@@ -2,13 +2,12 @@ package project_BPC2;
 
 class Cybersecurity extends Student{
 
-	public Cybersecurity(String name, String surname, int birth) {
-		super(name, surname, birth);
+	public Cybersecurity(int ID, String name, String surname, int birth) {
+		super(ID, name, surname, birth);
 		// TODO Auto-generated constructor stub
 	}
 
-	// TODO Zahashovat jmeno a prijmeni
-	public void applySkill() {
-		System.out.println("Hash baby");
+	public void generateHash() {
+		System.out.println("Hash brasko");
 	}
 }
