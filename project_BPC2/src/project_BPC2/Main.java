@@ -27,7 +27,7 @@ public class Main {
 		System.out.println("\nAPLIKACE DATABAZE STUDENTU");
 		
 		Scanner sc = new Scanner(System.in);
-		Databaze newDatabase = new Databaze(1);
+		Databaze newDatabase = new Databaze(2);
 		
 		boolean run = true;
 		while (run) {
@@ -42,16 +42,18 @@ public class Main {
 			System.out.println("8 - Vypis poctu studentu ve skupinach");
 			System.out.println("9 - Nacteni studenta ze souboru");
 			System.out.println("0 - Odstraneni studenta ze souboru");
-			System.out.println("neco jineho - Ukonceni programu");
+			System.out.println("neco jineho - Ukonceni programu\n");
 			
 			
 			int choice = pouzeCelaCisla(sc);
 			switch (choice) {
 				case 1: //TODO Vytvoreni studenta
-					System.out.println("1 - Vytvoreni nove databaze");
+					System.out.println("1 - Vytvoreni noveho studenta");
+					System.out.println("Je tento student oboru telekomunikace [t] nebo kyberbezpecnosti? [k]: ");
+					newDatabase.setStudent();
 					break;
 
-				case 2: //TODO Zadani znamky studentovi
+				case 2: //TODO Zadani znamky studentovi+
 					System.out.println("2 - Zadani znamky studentovi");
 					break;
 					
@@ -61,10 +63,14 @@ public class Main {
 				
 				case 4: //TODO Vypis podle ID
 					System.out.println("4 - Vypis informaci o studentovi podle ID");
+					newDatabase.vypisDatabazi();
 					break;
 					
-				case 5: //TODO Dovednost studetna
+				case 5: //TODO Dovednost studetna podle ID
 					System.out.println("5 - Spusteni dovednosti studenta");
+					System.out.print("Zadejte ID studenta: ");
+					int ID = sc.nextInt();
+					newDatabase.applySkill(ID);
 					break;
 					
 				case 6: //TODO Vypis vsech se razenim

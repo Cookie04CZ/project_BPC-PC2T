@@ -1,5 +1,6 @@
 package project_BPC2;
 
+
 public class Student {
 	private int ID;
     private String name;
@@ -13,12 +14,20 @@ public class Student {
         this.birth = birth;
     }
     
+    public int getID() {
+		return ID;
+	}
+    
     public String getName() {
 		return name;
 	}
 	
 	public String getSurname() {
 		return surname;
+	}
+	
+	
+	public void skill() {
 	}
 	
 }
