@@ -4,6 +4,7 @@ import java.util.Scanner;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.SQLException;
 
@@ -73,6 +74,7 @@ public class Databaze {
 	
 	//TODO osetrit vstupy
 	//TODO dodelat
+	//TODO musi se posunout vsichni
 	public void removeFromDb() {
 		for (Student student : prvkyDatabaze) {
 			System.out.println(student.getInfo());
@@ -137,7 +139,7 @@ public class Databaze {
 			return false;
 		}
 	    String studentstable = "CREATE TABLE IF NOT EXISTS students (idstudents integer PRIMARY KEY, name varchar(45) NOT NULL, surname VARCHAR(45) NOT NULL, birth INT NOT NULL, specs TEXT CHECK(specs IN ('t', 'c')) NOT NULL);";
-	    String markstable = "CREATE TABLE IF NOT EXISTS marks (idmarks INTEGER PRIMARY KEY AUTOINCREMENT, mark INT CHECK (mark BETWEEN 1 AND 5), students_idstudents INTEGER NOT NULL, FOREIGN KEY (students_idstudents) REFERENCES students(idstudents) ON DELETE CASCADE);";
+	    String markstable = "CREATE TABLE IF NOT EXISTS marks (idmarks INTEGER PRIMARY KEY AUTOINCREMENT, mark INTEGER CHECK (mark BETWEEN 1 AND 5), students_idstudents INTEGER NOT NULL, FOREIGN KEY (students_idstudents) REFERENCES students(idstudents) ON DELETE CASCADE);";
 	    try{
 	    	Statement stmt1 = conn.createStatement(); 
 	        stmt1.execute(studentstable);
@@ -155,7 +157,7 @@ public class Databaze {
 	public boolean saveToDB(Databaze db) {
 		if (conn==null) {
 			return false;
-		}	
+		}
 		String sqls = "INSERT INTO students (idstudents, name, surname, birth, specs) VALUES (?, ?, ?, ?, ?)";
 		String sqlm = "INSERT INTO marks (mark, students_idstudents) VALUES (?, ?);";
 		try {
@@ -185,7 +187,81 @@ public class Databaze {
 			System.out.println(e.getMessage());
 		}
 		return false;
+	}
+	
+	public boolean loadFromDB(){
+		if (conn == null) {
+	        System.out.println("Databaze neni pripojena.");
+	        return false;
+	    }
+
+	    String sql = "SELECT * FROM students";
+
+	    try (Statement stmt = conn.createStatement();
+	    	ResultSet rs = stmt.executeQuery(sql)) {
+
+	        prvkyDatabaze.clear(); // Vyčisti stávající záznamy v paměti
+
+	        while (rs.next()) {
+	            int id = rs.getInt("idstudents");
+	            String name = rs.getString("name");
+	            String surname = rs.getString("surname");
+	            int birth = rs.getInt("birth");
+	            String specs = rs.getString("specs");
+
+	            Student student;
+	            if (specs.equalsIgnoreCase("t")) {
+	                student = new Telecommunications(id, name, surname, birth);
+	            } else if (specs.equalsIgnoreCase("c") || specs.equalsIgnoreCase("k")) {
+	                student = new Cybersecurity(id, name, surname, birth);
+	            } else {
+	                System.out.println("Neznamy obor: " + specs + " pro studenta s ID: " + id);
+	                continue;
+	            }
+
+	            prvkyDatabaze.add(student);
+
+	            System.out.println("Nacten student: " + name + " " + surname + ", obor: " + specs);
+	            
+	            if (!loadMarksFromDB(id, student)) {
+	                System.out.println("Nepodarilo se nacist znamky studenta s ID " + id);
+	            }
+	        }
+
+	        return true;
+
+	    } catch (SQLException e) {
+	        System.out.println("Chyba pri nacitani studentu: " + e.getMessage());
+	        return false;
+	    }
 		
+	}
+	
+	public boolean loadMarksFromDB(int studentId, Student student) {
+	    String sql = "SELECT mark FROM marks WHERE students_idstudents = ?";
+
+	    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	        pstmt.setInt(1, studentId);
+	        ResultSet rs = pstmt.executeQuery();
+
+	        System.out.print("Znamky: ");
+	        boolean isMark = false;
+	        while (rs.next()) {
+	            isMark = true;
+	            int mark = rs.getInt("mark");
+	            student.setMark(mark);
+	            System.out.print(mark + " ");
+	        }
+	        if (!isMark) {
+	            System.out.print("zadne");
+	        }
+	        System.out.println();
+	        return true;
+
+	    } catch (SQLException e) {
+	        System.out.println("Chyba pri nacitani znamky studenta: " + e.getMessage());
+	        return false;
+	    }
 	}
 	
 }

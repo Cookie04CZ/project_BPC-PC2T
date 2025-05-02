@@ -9,9 +9,15 @@ public class Main {
 		Scanner sc = new Scanner(System.in);
 		Databaze newDatabase = new Databaze();
 		
+		
+		
 		// Připojení k databázi
 	    if (newDatabase.connect()) {
-	        System.out.println("Úspěšně připojeno k databázi.");
+	    	if (newDatabase.loadFromDB()) {
+	            System.out.println("Studenti byli nacteni z databaze.");
+	        } else {
+	            System.out.println("Nepodarilo se nacist studenty z databaze.");
+	        }
 	    } else {
 	        System.out.println("Chyba při připojování k databázi.");
 	        return;
@@ -24,8 +30,6 @@ public class Main {
 	        System.out.println("Chyba při vytváření tabulek.");
 	    }
 		
-	    
-	    
 	    
 		boolean run = true;
 		while (run) {
