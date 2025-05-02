@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class Databaze {
 	private Scanner sc;
 	private Student [] prvkyDatabaze;
-	private int posledniStudent = 0;
+	private int pocetStudentu = 0;
 	
 	public Databaze(int count)
 	{
@@ -14,16 +14,31 @@ public class Databaze {
 	
 	
 	// VYTVORENI STUDENTA
-	public void setStudent()
+	public void newStudent()
 	{
 		System.out.println("Zadejte jmeno studenta, prijmeni a datum narozeni: ");
-		
 		String name = sc.next();
 		String surname = sc.next();
 		int birth = Main.pouzeCelaCisla(sc);
-		int ID = 0;
-		prvkyDatabaze[posledniStudent++] = new Telecommunications(0, "Pepa0Morse", "Zdepa", 5);
-		prvkyDatabaze[posledniStudent++] = new Cybersecurity(1, "Kohout", "Umyla", 6);
+		System.out.println("Je tento student oboru telekomunikace [t] nebo kyberbezpecnosti? [k]: ");
+		String spec = sc.next();
+		switch (spec) {
+			case "t":
+			case "T":
+				prvkyDatabaze[pocetStudentu] = new Telecommunications(pocetStudentu, name, surname, birth);
+				pocetStudentu++;
+				break;
+				
+			case "k":
+			case "K":
+				prvkyDatabaze[pocetStudentu] = new Cybersecurity(pocetStudentu, name, surname, birth);
+				pocetStudentu++;
+				break;
+				
+			default:
+				System.out.println("Vas vyber oboru neprobehl spravne (student nebyl vytvoren), zkuste to znovu");
+				break;
+		}
 	}
 	
 	

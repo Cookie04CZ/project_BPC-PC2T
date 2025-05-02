@@ -40,10 +40,8 @@ public class Main {
 			System.out.println("[6] Vypis vsech studentu razeny dle prijmeni");
 			System.out.println("[7] Vypis obecneho studijniho prumeru");
 			System.out.println("[8] Vypis poctu studentu ve skupinach");
-			System.out.println("[9] Nacteni studenta ze souboru");
-			System.out.println("[0] Odstraneni studenta ze souboru");
-			System.out.println("[Neco jineho] Ukonceni programu\n");
-			
+			System.out.println("[9] Prace se souborem");
+			System.out.println("[0] Ukonceni programu\n");
 			
 			int choice = pouzeCelaCisla(sc);
 			switch (choice) {
@@ -89,12 +87,11 @@ public class Main {
 					break;
 					
 				case 0: //TODO Odstraneni ze souboru
-					System.out.println("0 - Odstraneni studenta ze souboru");
-					break;
-					
-				default:
 					System.out.println("==== APLIKACE UKONCENA ====");
 					run = false;
+					break;
+				default:
+					System.out.println("Chybne zadane cislo");
 					break;
 			}
 		}
