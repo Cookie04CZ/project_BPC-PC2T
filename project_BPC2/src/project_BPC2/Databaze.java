@@ -61,7 +61,26 @@ public class Databaze {
 	}
 	
 	public void addMarks(int ID) {
-		
+		System.out.println("Zadejte znamku: ");
+		int mark = sc.nextInt();
+		if (mark < 1 || mark > 5) {
+			System.out.println("Znamky mohou byt pouze 1 - 5");
+		} else {
+			prvkyDatabaze.get(ID).setMark(mark);
+			System.out.println(prvkyDatabaze.get(ID).getMarks().toString());
+		}
+	}
+	
+	//TODO osetrit vstupy
+	//TODO dodelat
+	public void removeFromDb() {
+		for (Student student : prvkyDatabaze) {
+			System.out.println(student.getInfo());
+		}
+		System.out.println("Zadejte ID studenta, ktereho chcete terminovat");
+		int termix = sc.nextInt();
+		prvkyDatabaze.remove(termix);
+		System.out.println("Zadejte ID studenta, ktereho chcete terminovat");
 	}
 	
 	// DOVEDNOST STUDENTA PODLE ID
@@ -90,7 +109,6 @@ public class Databaze {
 	}
 	
 	// prace s databazema
-	
 	private Connection conn;
 	public boolean connect() { 
 		conn= null; 
@@ -118,11 +136,12 @@ public class Databaze {
 		if (conn==null) {
 			return false;
 		}
-	    String studentstable = "CREATE TABLE IF NOT EXISTS students (" + "idstudents integer PRIMARY KEY," + "name varchar(45) NOT NULL,"+ "surname VARCHAR(45) NOT NULL, " + "birth INT NOT NULL, " + "specs TEXT CHECK(specs IN ('t', 'c')) NOT NULL" + ");";
-	    String markstable = "CREATE TABLE IF NOT EXISTS students (" + "idmarks INT PRIMARY KEY, " + "mark INT CHECK (mark BETWEEN 1 AND 5), "+ "students_idstudents INTEGER NOT NULL, " + "FOREIGN KEY (students_idstudents) REFERENCES students(idstudents) ON DELETE CASCADE " + ");";
+	    String studentstable = "CREATE TABLE IF NOT EXISTS students (idstudents integer PRIMARY KEY, name varchar(45) NOT NULL, surname VARCHAR(45) NOT NULL, birth INT NOT NULL, specs TEXT CHECK(specs IN ('t', 'c')) NOT NULL);";
+	    String markstable = "CREATE TABLE IF NOT EXISTS marks (idmarks INTEGER PRIMARY KEY AUTOINCREMENT, mark INT CHECK (mark BETWEEN 1 AND 5), students_idstudents INTEGER NOT NULL, FOREIGN KEY (students_idstudents) REFERENCES students(idstudents) ON DELETE CASCADE);";
 	    try{
 	    	Statement stmt1 = conn.createStatement(); 
 	        stmt1.execute(studentstable);
+	        
 	        Statement stmt2 = conn.createStatement(); 
 	        stmt2.execute(markstable);
 	        return true;
@@ -137,18 +156,29 @@ public class Databaze {
 		if (conn==null) {
 			return false;
 		}	
-		String sql = "INSERT INTO students (idstudents, name, surname, birth, specs) VALUES (?, ?, ?, ?, ?)";
+		String sqls = "INSERT INTO students (idstudents, name, surname, birth, specs) VALUES (?, ?, ?, ?, ?)";
+		String sqlm = "INSERT INTO marks (mark, students_idstudents) VALUES (?, ?);";
 		try {
 			for (int i = 0; i < db.prvkyDatabaze.size(); i++) {
-				PreparedStatement pstmt = conn.prepareStatement(sql);
-				pstmt.setInt(1, db.prvkyDatabaze.get(i).getID());
-				pstmt.setString(2, db.prvkyDatabaze.get(i).getName());
-				pstmt.setString(3, db.prvkyDatabaze.get(i).getSurname());
-				pstmt.setInt(4, db.prvkyDatabaze.get(i).getBirth());
-				pstmt.setString(5, db.prvkyDatabaze.get(i) instanceof Telecommunications ? "t" : "c");
+				PreparedStatement pstmts = conn.prepareStatement(sqls);
+				pstmts.setInt(1, db.prvkyDatabaze.get(i).getID());
+				pstmts.setString(2, db.prvkyDatabaze.get(i).getName());
+				pstmts.setString(3, db.prvkyDatabaze.get(i).getSurname());
+				pstmts.setInt(4, db.prvkyDatabaze.get(i).getBirth());
+				pstmts.setString(5, db.prvkyDatabaze.get(i) instanceof Telecommunications ? "t" : "c");
+				pstmts.executeUpdate();
 				
-				pstmt.executeUpdate();
 				System.out.println("Student byl ulozen do databaze.");
+				
+				PreparedStatement pstmtm = conn.prepareStatement(sqlm);
+				for (int mark : db.prvkyDatabaze.get(i).getMarks()) {
+					System.out.println(mark);
+					System.out.println(i);
+					pstmtm.setInt(1, mark);
+					pstmtm.setInt(2, i);
+					pstmtm.executeUpdate();
+					System.out.println("Znamka znamkuje");
+				}
 			}
 			return true;
 		} catch (SQLException e){

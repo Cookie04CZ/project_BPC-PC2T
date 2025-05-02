@@ -2,30 +2,6 @@ package project_BPC2;
 import java.util.Scanner;
 
 public class Main {
-	
-	// Test celych cisel pri vyberu moznosti ukradnuto ze cvik
-	public static int pouzeCelaCisla(Scanner sc) 
-	{
-		int cislo = 0;
-		try
-		{
-			cislo = sc.nextInt();
-		}
-		catch(Exception e)
-		{
-			// System.out.println("Nastala vyjimka typu "+e.toString());
-			System.out.println("Chybne zadane cislo, zadejte prosim cele cislo");
-			sc.nextLine();
-			cislo = pouzeCelaCisla(sc);
-		}
-		return cislo;
-	}
-	
-	
-	
-	
-	
-
 	public static void main(String[] args) {
 		
 		System.out.println("\nAPLIKACE DATABAZE STUDENTU");
@@ -74,10 +50,16 @@ public class Main {
 
 				case 2: //TODO Zadani znamky studentovi+
 					System.out.println("2 - Zadani znamky studentovi");
+					System.out.print("Zadejte ID studenta: ");
+					int ID2 = sc.nextInt();
+					newDatabase.addMarks(ID2);
 					break;
 					
 				case 3: //TODO Terminace studenta z databaze
 					System.out.println("3 - Terminace studenta");
+					System.out.print("Zadejte ID studenta: ");
+					int ID3 = sc.nextInt();
+					newDatabase.vypisDatabazi(ID3);
 					break;
 				
 				case 4: //TODO Vypis podle ID
@@ -123,5 +105,23 @@ public class Main {
 		}
 		
 	}
-
+	
+	
+	// Test celych cisel pri vyberu moznosti ukradnuto ze cvik
+	public static int pouzeCelaCisla(Scanner sc) 
+	{
+		int cislo = 0;
+		try
+		{
+			cislo = sc.nextInt();
+		}
+		catch(Exception e)
+		{
+			// System.out.println("Nastala vyjimka typu "+e.toString());
+			System.out.println("Chybne zadane cislo, zadejte prosim cele cislo");
+			sc.nextLine();
+			cislo = pouzeCelaCisla(sc);
+		}
+		return cislo;
+	}
 }

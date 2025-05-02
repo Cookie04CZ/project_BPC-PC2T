@@ -8,12 +8,12 @@ public class Student {
     private int birth;
     private ArrayList<Integer> marks;
 
-    public Student(int ID, String name, String surname, int birth, ArrayList<Integer> marks) {
+    public Student(int ID, String name, String surname, int birth) {
     	this.ID = ID;
         this.name = name;
         this.surname = surname;
         this.birth = birth;
-        this.marks = marks;
+        this.marks = new ArrayList<Integer>();
     }
     
     public int getID() {
@@ -34,6 +34,10 @@ public class Student {
 	
 	public ArrayList<Integer> getMarks(){
 		return marks;
+	}
+	
+	public void setMark(int mark) {
+		marks.addLast(mark);
 	}
 	
 	public String getInfo() {
