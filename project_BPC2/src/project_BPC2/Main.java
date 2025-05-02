@@ -13,6 +13,13 @@ public class Main {
 		
 		// Připojení k databázi
 	    if (newDatabase.connect()) {
+	    	// Vytvoření tabulek (pokud ještě neexistují)
+		    if (newDatabase.createTable()) {
+		        System.out.println("Tabulky byly úspěšně vytvořeny/uz existuji");
+		    } else {
+		        System.out.println("Chyba při vytváření tabulek.");
+		    }
+	    	
 	    	if (newDatabase.loadFromDB()) {
 	            System.out.println("Studenti byli nacteni z databaze.");
 	        } else {
@@ -23,12 +30,7 @@ public class Main {
 	        return;
 	    }
 
-	    // Vytvoření tabulek (pokud ještě neexistují)
-	    if (newDatabase.createTable()) {
-	        System.out.println("Tabulky byly úspěšně vytvořeny.");
-	    } else {
-	        System.out.println("Chyba při vytváření tabulek.");
-	    }
+	    
 		
 	    
 		boolean run = true;
