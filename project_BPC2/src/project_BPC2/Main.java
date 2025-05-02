@@ -21,6 +21,10 @@ public class Main {
 		return cislo;
 	}
 	
+	
+	
+	
+	
 
 	public static void main(String[] args) {
 		
@@ -29,6 +33,24 @@ public class Main {
 		Scanner sc = new Scanner(System.in);
 		Databaze newDatabase = new Databaze(2);
 		
+		// Připojení k databázi
+	    if (newDatabase.connect()) {
+	        System.out.println("Úspěšně připojeno k databázi.");
+	    } else {
+	        System.out.println("Chyba při připojování k databázi.");
+	        return;
+	    }
+
+	    // Vytvoření tabulek (pokud ještě neexistují)
+	    if (newDatabase.createTable()) {
+	        System.out.println("Tabulky byly úspěšně vytvořeny.");
+	    } else {
+	        System.out.println("Chyba při vytváření tabulek.");
+	    }
+		
+	    
+	    
+	    
 		boolean run = true;
 		while (run) {
 			System.out.println("\n====Vyberte moznost====");
@@ -88,6 +110,7 @@ public class Main {
 					
 				case 0: //TODO Odstraneni ze souboru
 					System.out.println("==== APLIKACE UKONCENA ====");
+					newDatabase.disconnect();
 					run = false;
 					break;
 				default:

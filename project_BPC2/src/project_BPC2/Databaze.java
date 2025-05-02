@@ -1,5 +1,9 @@
 package project_BPC2;
 import java.util.Scanner;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
+import java.sql.SQLException;
 
 public class Databaze {
 	private Scanner sc;
@@ -77,6 +81,49 @@ public class Databaze {
 	     
 	    }
 	    System.out.println("Student s ID " + ID + " nebyl nalezen.");
+	}
+	
+	// prace s databazema
+	
+	private Connection conn;
+	public boolean connect() { 
+		conn= null; 
+	    try {
+	    	conn = DriverManager.getConnection("jdbc:sqlite:databazeStudentu.db");                       
+	    } 
+	    catch (SQLException e) { 
+	        System.out.println(e.getMessage());
+	        return false;
+	    }
+	    return true;
+	}
+	public void disconnect() { 
+		if (conn != null) {
+			try {
+			   conn.close();  
+		    } 
+	        catch (SQLException ex) {
+	        	System.out.println(ex.getMessage());
+	        }
+		}
+	}
+
+	public boolean createTable() {
+		if (conn==null)
+			return false;
+	    String studentstable = "CREATE TABLE IF NOT EXISTS students (" + "idstudents integer PRIMARY KEY," + "name varchar(45) NOT NULL,"+ "surname VARCHAR(45) NOT NULL, " + "birth INT NOT NULL, " + "specs TEXT CHECK(specs IN ('t', 'c')) NOT NULL" + ");";
+	    String markstable = "CREATE TABLE IF NOT EXISTS students (" + "idmarks INT PRIMARY KEY, " + "mark INT CHECK (mark BETWEEN 1 AND 5), "+ "students_idstudents INTEGER NOT NULL, " + "FOREIGN KEY (students_idstudents) REFERENCES students(idstudents) ON DELETE CASCADE " + ");";
+	    try{
+	    	Statement stmt1 = conn.createStatement(); 
+	        stmt1.execute(studentstable);
+	        Statement stmt2 = conn.createStatement(); 
+	        stmt2.execute(markstable);
+	        return true;
+	    }
+	    catch (SQLException e) {
+	    System.out.println(e.getMessage());
+	    }
+	    return false;
 	}
 	
 }
