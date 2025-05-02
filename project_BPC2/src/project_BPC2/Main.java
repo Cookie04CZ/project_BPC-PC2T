@@ -61,9 +61,7 @@ public class Main {
 					
 				case 3: //TODO Terminace studenta z databaze
 					System.out.println("3 - Terminace studenta");
-					System.out.print("Zadejte ID studenta: ");
-					int ID3 = sc.nextInt();
-					newDatabase.vypisDatabazi(ID3);
+					newDatabase.removeFromDb();
 					break;
 				
 				case 4: //TODO Vypis podle ID

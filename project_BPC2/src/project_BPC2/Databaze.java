@@ -12,6 +12,7 @@ public class Databaze {
 	private Scanner sc;
 	private ArrayList<Student> prvkyDatabaze;
 	private int pocetStudentu = 0;
+	private int pocetStudentuVDB;
 	
 	public Databaze()
 	{
@@ -72,17 +73,33 @@ public class Databaze {
 		}
 	}
 	
-	//TODO osetrit vstupy
-	//TODO dodelat
-	//TODO musi se posunout vsichni
 	public void removeFromDb() {
 		for (Student student : prvkyDatabaze) {
 			System.out.println(student.getInfo());
 		}
-		System.out.println("Zadejte ID studenta, ktereho chcete terminovat");
-		int termix = sc.nextInt();
-		prvkyDatabaze.remove(termix);
-		System.out.println("Zadejte ID studenta, ktereho chcete terminovat");
+		System.out.println("Zadejte ID studenta, kterého chcete odstranit z paměti:");
+	    int idToRemove = Main.pouzeCelaCisla(sc);
+
+	    Student toRemove = null;
+	    for (Student s : prvkyDatabaze) {
+	        if (s.getID() == idToRemove) {
+	            toRemove = s;
+	            break;
+	        }
+	    }
+
+	    if (toRemove != null) {
+	        prvkyDatabaze.remove(toRemove);
+	        pocetStudentu--;
+
+	        for (int i = 0; i < prvkyDatabaze.size(); i++) {
+	            prvkyDatabaze.get(i).setID(i);
+	        }
+
+	        System.out.println("Student s ID " + idToRemove + " byl odstraněn ID byla přečíslována.");
+	    } else {
+	        System.out.println("Student s tímto ID nebyl nalezen v paměti.");
+	    }
 	}
 	
 	// DOVEDNOST STUDENTA PODLE ID
@@ -91,8 +108,6 @@ public class Databaze {
 	        if (student.getID() == ID) {
 	            System.out.println("Jmeno: " + student.getName());
 	            System.out.println("Prijmeni: " + student.getSurname());
-	            //System.out.println("Rok narození: " + student.getBirth());
-	            //System.out.printf("Studijní průměr: %.2f\n", student.getStudijniPrumer());
 	            
 	            if (student instanceof Telecommunications) {
 	            	Telecommunications TelecommunicationsStudent = (Telecommunications) student;
@@ -158,35 +173,125 @@ public class Databaze {
 		if (conn==null) {
 			return false;
 		}
-		String sqls = "INSERT INTO students (idstudents, name, surname, birth, specs) VALUES (?, ?, ?, ?, ?)";
+		
+		//String insertMarks = "INSERT INTO marks (mark, students_idstudents) VALUES (?, ?);";
+		//String updateMarks = "INSERT INTO marks (mark, students_idstudents) VALUES (?, ?);";
+		
+		
+		if (pocetStudentu == pocetStudentuVDB) {
+			for (Student student : db.prvkyDatabaze) {
+				updateStudent(student);
+			}
+			System.out.println("Studenti byli aktualizovani, pocet studentu zustal");
+		} else if (pocetStudentu > pocetStudentuVDB) {
+			for (int i = 0; i < pocetStudentuVDB; i++) {
+				updateStudent(db.prvkyDatabaze.get(i));
+		    }
+		    for (int i = pocetStudentuVDB; i < pocetStudentu; i++) {
+		        insertStudent(db.prvkyDatabaze.get(i));
+		    }
+		} else {
+		    for (int i = 0; i < pocetStudentu; i++) {
+		        updateStudent(db.prvkyDatabaze.get(i));
+		    }
+
+		    for (int i = pocetStudentu; i < pocetStudentuVDB; i++) {
+		        deleteStudent(i);
+		    }
+		}
+		return false;
+		
+		
+		
+		/*
 		String sqlm = "INSERT INTO marks (mark, students_idstudents) VALUES (?, ?);";
 		try {
 			for (int i = 0; i < db.prvkyDatabaze.size(); i++) {
 				PreparedStatement pstmts = conn.prepareStatement(sqls);
-				pstmts.setInt(1, db.prvkyDatabaze.get(i).getID());
-				pstmts.setString(2, db.prvkyDatabaze.get(i).getName());
-				pstmts.setString(3, db.prvkyDatabaze.get(i).getSurname());
-				pstmts.setInt(4, db.prvkyDatabaze.get(i).getBirth());
-				pstmts.setString(5, db.prvkyDatabaze.get(i) instanceof Telecommunications ? "t" : "c");
+				pstmts.setString(1, db.prvkyDatabaze.get(i).getName());
+				pstmts.setString(2, db.prvkyDatabaze.get(i).getSurname());
+				pstmts.setInt(3, db.prvkyDatabaze.get(i).getBirth());
+				pstmts.setString(4, db.prvkyDatabaze.get(i) instanceof Telecommunications ? "t" : "c");
 				pstmts.executeUpdate();
 				
 				System.out.println("Student byl ulozen do databaze.");
 				
 				PreparedStatement pstmtm = conn.prepareStatement(sqlm);
 				for (int mark : db.prvkyDatabaze.get(i).getMarks()) {
-					System.out.println(mark);
-					System.out.println(i);
 					pstmtm.setInt(1, mark);
 					pstmtm.setInt(2, i);
 					pstmtm.executeUpdate();
-					System.out.println("Znamka znamkuje");
 				}
 			}
+			System.out.println(pocetStudentuVDB);
 			return true;
 		} catch (SQLException e){
 			System.out.println(e.getMessage());
 		}
+		return false;*/
+	}
+	
+	public boolean insertStudent(Student student) {
+		String insertStudent = "INSERT INTO students (idstudents, name, surname, birth, specs) VALUES (?, ?, ?, ?, ?)";
+		try (PreparedStatement pstInsertStudent = conn.prepareStatement(insertStudent)){
+			pstInsertStudent.setInt(1, student.getID());
+			pstInsertStudent.setString(2, student.getName());
+			pstInsertStudent.setString(3, student.getSurname());
+			pstInsertStudent.setInt(4, student.getBirth());
+			pstInsertStudent.setString(5, student instanceof Telecommunications ? "t" : "c");
+			int rowsAffected =  pstInsertStudent.executeUpdate();
+			if (rowsAffected > 0) {
+	            System.out.println("Student s ID " + student.getID() + " byl vlozen.");
+	            return true;
+	        } else {
+	            System.out.println("Student s ID " + student.getID() + " nebyl vlozen.");
+	            return false;
+	        }
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
 		return false;
+		
+	}
+	
+	public boolean updateStudent(Student student) {
+		String updateStudent = "UPDATE students SET name = ?, surname = ?, birth = ?, specs = ? WHERE idstudents = ?;";
+		try (PreparedStatement pstUpdateStudent = conn.prepareStatement(updateStudent)){
+			pstUpdateStudent.setString(1, student.getName());
+			pstUpdateStudent.setString(2, student.getSurname());
+			pstUpdateStudent.setInt(3, student.getBirth());
+			pstUpdateStudent.setString(4, student instanceof Telecommunications ? "t" : "c");
+			pstUpdateStudent.setInt(5, student.getID());
+			int rowsAffected =  pstUpdateStudent.executeUpdate();
+			if (rowsAffected > 0) {
+	            System.out.println("Student s ID " + student.getID() + " byl aktualizován.");
+	            return true;
+	        } else {
+	            System.out.println("Student s ID " + student.getID() + " nebyl aktualizovan.");
+	            return false;
+	        }
+		} catch (SQLException e){
+			System.out.println(e.getMessage());
+		}
+		return false;
+	}
+
+	public boolean deleteStudent(int id) {
+		String deleteStudent = "DELETE FROM students WHERE idstudents = ?";
+	    try (PreparedStatement pstDeleteStudent = conn.prepareStatement(deleteStudent)) {
+	    	pstDeleteStudent.setInt(1, id);
+	    	int rowsAffected =  pstDeleteStudent.executeUpdate();
+			if (rowsAffected > 0) {
+	            System.out.println("Student s ID " + id + " byl odstranen.");
+	            return true;
+	        } else {
+	            System.out.println("Student s ID " + id + " nebyl ostranen.");
+	            return false;
+	        }
+	    } catch (SQLException e) {
+	        System.out.println("Chyba při mazání: " + e.getMessage());
+	        return false;
+	    }
 	}
 	
 	public boolean loadFromDB(){
@@ -203,7 +308,7 @@ public class Databaze {
 	        prvkyDatabaze.clear(); // Vyčisti stávající záznamy v paměti
 
 	        while (rs.next()) {
-	            int id = rs.getInt("idstudents");
+	        	int ID = rs.getInt("idstudents");
 	            String name = rs.getString("name");
 	            String surname = rs.getString("surname");
 	            int birth = rs.getInt("birth");
@@ -211,23 +316,26 @@ public class Databaze {
 
 	            Student student;
 	            if (specs.equalsIgnoreCase("t")) {
-	                student = new Telecommunications(id, name, surname, birth);
+	                student = new Telecommunications(ID, name, surname, birth);
 	            } else if (specs.equalsIgnoreCase("c") || specs.equalsIgnoreCase("k")) {
-	                student = new Cybersecurity(id, name, surname, birth);
+	                student = new Cybersecurity(ID, name, surname, birth);
 	            } else {
-	                System.out.println("Neznamy obor: " + specs + " pro studenta s ID: " + id);
+	                System.out.println("Neznamy obor: " + specs + " pro studenta s ID: " + pocetStudentu++);
 	                continue;
 	            }
 
 	            prvkyDatabaze.add(student);
-
+	            pocetStudentu++;
+	            pocetStudentuVDB++;
+	            
 	            System.out.println("Nacten student: " + name + " " + surname + ", obor: " + specs);
 	            
-	            if (!loadMarksFromDB(id, student)) {
-	                System.out.println("Nepodarilo se nacist znamky studenta s ID " + id);
+	            if (!loadMarksFromDB(pocetStudentu, student)) {
+	                System.out.println("Nepodarilo se nacist znamky studenta s ID " + pocetStudentu);
 	            }
 	        }
-
+	        System.out.println(pocetStudentuVDB);
+	        
 	        return true;
 
 	    } catch (SQLException e) {
@@ -241,7 +349,7 @@ public class Databaze {
 	    String sql = "SELECT mark FROM marks WHERE students_idstudents = ?";
 
 	    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-	        pstmt.setInt(1, studentId);
+	        pstmt.setInt(1, pocetStudentu-1);
 	        ResultSet rs = pstmt.executeQuery();
 
 	        System.out.print("Znamky: ");

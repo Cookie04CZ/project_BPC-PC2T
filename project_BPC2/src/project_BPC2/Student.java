@@ -20,6 +20,10 @@ public class Student {
 		return ID;
 	}
     
+    public void setID(int newID) {
+    	this.ID = newID;
+    }
+    
     public String getName() {
 		return name;
 	}
