@@ -1,17 +1,19 @@
 package project_BPC2;
-
+import java.util.ArrayList;
 
 public class Student {
 	private int ID;
     private String name;
     private String surname;
     private int birth;
+    private ArrayList<Integer> marks;
 
-    public Student(int ID, String name, String surname, int birth) {
+    public Student(int ID, String name, String surname, int birth, ArrayList<Integer> marks) {
     	this.ID = ID;
         this.name = name;
         this.surname = surname;
         this.birth = birth;
+        this.marks = marks;
     }
     
     public int getID() {
@@ -26,6 +28,17 @@ public class Student {
 		return surname;
 	}
 	
+	public int getBirth() {
+		return birth;
+	}
+	
+	public ArrayList<Integer> getMarks(){
+		return marks;
+	}
+	
+	public String getInfo() {
+		return ("ID: " + ID + " Name: " + name + " Surname: " + surname + " Birth: " + birth);
+	}
 	
 	public void skill() {
 	}

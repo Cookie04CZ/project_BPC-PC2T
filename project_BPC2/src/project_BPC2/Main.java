@@ -31,7 +31,7 @@ public class Main {
 		System.out.println("\nAPLIKACE DATABAZE STUDENTU");
 		
 		Scanner sc = new Scanner(System.in);
-		Databaze newDatabase = new Databaze(2);
+		Databaze newDatabase = new Databaze();
 		
 		// Připojení k databázi
 	    if (newDatabase.connect()) {
@@ -82,14 +82,16 @@ public class Main {
 				
 				case 4: //TODO Vypis podle ID
 					System.out.println("4 - Vypis informaci o studentovi podle ID");
-					newDatabase.vypisDatabazi();
+					System.out.print("Zadejte ID studenta: ");
+					int ID4 = sc.nextInt();
+					newDatabase.vypisDatabazi(ID4);
 					break;
 					
 				case 5: //TODO Dovednost studetna podle ID
 					System.out.println("5 - Spusteni dovednosti studenta");
 					System.out.print("Zadejte ID studenta: ");
-					int ID = sc.nextInt();
-					newDatabase.applySkill(ID);
+					int ID5 = sc.nextInt();
+					newDatabase.applySkill(ID5);
 					break;
 					
 				case 6: //TODO Vypis vsech se razenim
@@ -105,11 +107,12 @@ public class Main {
 					break;
 					
 				case 9: //TODO Nacitani ze souboru
-					System.out.println("9 - Nacteni studenta ze souboru");
+					System.out.println("9 - Prace se souborem");
 					break;
 					
 				case 0: //TODO Odstraneni ze souboru
 					System.out.println("==== APLIKACE UKONCENA ====");
+					newDatabase.saveToDB(newDatabase);
 					newDatabase.disconnect();
 					run = false;
 					break;

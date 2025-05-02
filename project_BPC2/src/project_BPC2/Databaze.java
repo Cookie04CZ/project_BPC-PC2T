@@ -1,18 +1,20 @@
 package project_BPC2;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.SQLException;
 
 public class Databaze {
 	private Scanner sc;
-	private Student [] prvkyDatabaze;
+	private ArrayList<Student> prvkyDatabaze;
 	private int pocetStudentu = 0;
 	
-	public Databaze(int count)
+	public Databaze()
 	{
-		prvkyDatabaze = new Student[count];
+		prvkyDatabaze = new ArrayList<Student>();
 		sc = new Scanner(System.in);
 	}
 	
@@ -29,13 +31,13 @@ public class Databaze {
 		switch (spec) {
 			case "t":
 			case "T":
-				prvkyDatabaze[pocetStudentu] = new Telecommunications(pocetStudentu, name, surname, birth);
+				prvkyDatabaze.add(new Telecommunications(pocetStudentu, name, surname, birth));
 				pocetStudentu++;
 				break;
 				
 			case "k":
 			case "K":
-				prvkyDatabaze[pocetStudentu] = new Cybersecurity(pocetStudentu, name, surname, birth);
+				prvkyDatabaze.add(new Cybersecurity(pocetStudentu, name, surname, birth));
 				pocetStudentu++;
 				break;
 				
@@ -47,16 +49,20 @@ public class Databaze {
 	
 	
 	// VYPIS CELE DATABAZE
-	public void vypisDatabazi()
+	public void vypisDatabazi(int ID)
 	{
-		for (int i=0;i<prvkyDatabaze.length;i++){
-			if (prvkyDatabaze[i]!=null)
-				System.out.println(i+". "+prvkyDatabaze[i].getName() +" " + prvkyDatabaze[i].getSurname());
-			else
-				System.out.println(i+". "+"null");
+		if (prvkyDatabaze.size() == 0) {
+			System.out.println("Databaze je prazdna, pro pridani studenta stisknete 1");
+		} else if (ID > prvkyDatabaze.size()-1 || ID < 0) {
+			System.out.println("Student s timto ID neexistuje, rozsah ID je: 0 - " + (prvkyDatabaze.size()-1));
+		} else {
+			System.out.println(prvkyDatabaze.get(ID).getInfo());
 		}
 	}
 	
+	public void addMarks(int ID) {
+		
+	}
 	
 	// DOVEDNOST STUDENTA PODLE ID
 	public void applySkill(int ID) {
@@ -109,8 +115,9 @@ public class Databaze {
 	}
 
 	public boolean createTable() {
-		if (conn==null)
+		if (conn==null) {
 			return false;
+		}
 	    String studentstable = "CREATE TABLE IF NOT EXISTS students (" + "idstudents integer PRIMARY KEY," + "name varchar(45) NOT NULL,"+ "surname VARCHAR(45) NOT NULL, " + "birth INT NOT NULL, " + "specs TEXT CHECK(specs IN ('t', 'c')) NOT NULL" + ");";
 	    String markstable = "CREATE TABLE IF NOT EXISTS students (" + "idmarks INT PRIMARY KEY, " + "mark INT CHECK (mark BETWEEN 1 AND 5), "+ "students_idstudents INTEGER NOT NULL, " + "FOREIGN KEY (students_idstudents) REFERENCES students(idstudents) ON DELETE CASCADE " + ");";
 	    try{
@@ -124,6 +131,31 @@ public class Databaze {
 	    System.out.println(e.getMessage());
 	    }
 	    return false;
+	}
+	
+	public boolean saveToDB(Databaze db) {
+		if (conn==null) {
+			return false;
+		}	
+		String sql = "INSERT INTO students (idstudents, name, surname, birth, specs) VALUES (?, ?, ?, ?, ?)";
+		try {
+			for (int i = 0; i < db.prvkyDatabaze.size(); i++) {
+				PreparedStatement pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, db.prvkyDatabaze.get(i).getID());
+				pstmt.setString(2, db.prvkyDatabaze.get(i).getName());
+				pstmt.setString(3, db.prvkyDatabaze.get(i).getSurname());
+				pstmt.setInt(4, db.prvkyDatabaze.get(i).getBirth());
+				pstmt.setString(5, db.prvkyDatabaze.get(i) instanceof Telecommunications ? "t" : "c");
+				
+				pstmt.executeUpdate();
+				System.out.println("Student byl ulozen do databaze.");
+			}
+			return true;
+		} catch (SQLException e){
+			System.out.println(e.getMessage());
+		}
+		return false;
+		
 	}
 	
 }
