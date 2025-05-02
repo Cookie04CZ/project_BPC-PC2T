@@ -32,25 +32,24 @@ public class Main {
 		boolean run = true;
 		while (run) {
 			System.out.println("\n====Vyberte moznost====");
-			System.out.println("1 - Vytvoreni nove databaze");
-			System.out.println("2 - Zadani znamky studentovi");
-			System.out.println("3 - Terminace studenta");
-			System.out.println("4 - Vypis informaci o studentovi podle ID");
-			System.out.println("5 - Studentova dovednost");
-			System.out.println("6 - Vypis vsech studentu razeny dle prijmeni");
-			System.out.println("7 - Vypis obecneho studijniho prumeru");
-			System.out.println("8 - Vypis poctu studentu ve skupinach");
-			System.out.println("9 - Nacteni studenta ze souboru");
-			System.out.println("0 - Odstraneni studenta ze souboru");
-			System.out.println("neco jineho - Ukonceni programu\n");
+			System.out.println("[1] Vytvoreni noveho studenta");
+			System.out.println("[2] Zadani znamky studentovi");
+			System.out.println("[3] Terminace studenta");
+			System.out.println("[4] Vypis informaci o studentovi podle ID");
+			System.out.println("[5] Studentova dovednost");
+			System.out.println("[6] Vypis vsech studentu razeny dle prijmeni");
+			System.out.println("[7] Vypis obecneho studijniho prumeru");
+			System.out.println("[8] Vypis poctu studentu ve skupinach");
+			System.out.println("[9] Nacteni studenta ze souboru");
+			System.out.println("[0] Odstraneni studenta ze souboru");
+			System.out.println("[Neco jineho] Ukonceni programu\n");
 			
 			
 			int choice = pouzeCelaCisla(sc);
 			switch (choice) {
 				case 1: //TODO Vytvoreni studenta
 					System.out.println("1 - Vytvoreni noveho studenta");
-					System.out.println("Je tento student oboru telekomunikace [t] nebo kyberbezpecnosti? [k]: ");
-					newDatabase.setStudent();
+					newDatabase.newStudent();
 					break;
 
 				case 2: //TODO Zadani znamky studentovi+
