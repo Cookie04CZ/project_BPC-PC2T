@@ -174,10 +174,6 @@ public class Databaze {
 			return false;
 		}
 		
-		//String insertMarks = "INSERT INTO marks (mark, students_idstudents) VALUES (?, ?);";
-		//String updateMarks = "INSERT INTO marks (mark, students_idstudents) VALUES (?, ?);";
-		
-		
 		if (pocetStudentu == pocetStudentuVDB) {
 			for (Student student : db.prvkyDatabaze) {
 				updateStudent(student);
@@ -199,36 +195,26 @@ public class Databaze {
 		        deleteStudent(i);
 		    }
 		}
-		return false;
 		
-		
-		
-		/*
-		String sqlm = "INSERT INTO marks (mark, students_idstudents) VALUES (?, ?);";
 		try {
-			for (int i = 0; i < db.prvkyDatabaze.size(); i++) {
-				PreparedStatement pstmts = conn.prepareStatement(sqls);
-				pstmts.setString(1, db.prvkyDatabaze.get(i).getName());
-				pstmts.setString(2, db.prvkyDatabaze.get(i).getSurname());
-				pstmts.setInt(3, db.prvkyDatabaze.get(i).getBirth());
-				pstmts.setString(4, db.prvkyDatabaze.get(i) instanceof Telecommunications ? "t" : "c");
-				pstmts.executeUpdate();
-				
-				System.out.println("Student byl ulozen do databaze.");
-				
-				PreparedStatement pstmtm = conn.prepareStatement(sqlm);
-				for (int mark : db.prvkyDatabaze.get(i).getMarks()) {
-					pstmtm.setInt(1, mark);
-					pstmtm.setInt(2, i);
-					pstmtm.executeUpdate();
+			conn.createStatement().executeUpdate("DELETE FROM marks");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String insertMark = "INSERT INTO marks (mark, students_idstudents) VALUES (?, ?);";
+		try (PreparedStatement pstmt = conn.prepareStatement(insertMark)){
+			for (Student student : db.prvkyDatabaze) {
+				for (int mark : student.getMarks()) {
+					pstmt.setInt(1, mark);
+					pstmt.setInt(2, student.getID());
+					pstmt.executeUpdate();
 				}
 			}
-			System.out.println(pocetStudentuVDB);
-			return true;
-		} catch (SQLException e){
+		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
-		return false;*/
+		return false;
 	}
 	
 	public boolean insertStudent(Student student) {
@@ -305,7 +291,7 @@ public class Databaze {
 	    try (Statement stmt = conn.createStatement();
 	    	ResultSet rs = stmt.executeQuery(sql)) {
 
-	        prvkyDatabaze.clear(); // Vyčisti stávající záznamy v paměti
+	        prvkyDatabaze.clear();
 
 	        while (rs.next()) {
 	        	int ID = rs.getInt("idstudents");
