@@ -2,7 +2,10 @@ package project_BPC2;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Connection;
@@ -55,8 +58,11 @@ public class Databaze{
 	
 	
 	// VYPIS CELE DATABAZE
-	public void vypisDatabazi(int ID)
+	public void vypisDatabazi()
 	{
+		System.out.println("rozsah ID je: 0 - " + (prvkyDatabaze.size()-1));
+		System.out.print("Zadejte ID studenta: ");
+		int ID = sc.nextInt();
 		if (prvkyDatabaze.size() == 0) {
 			System.out.println("Databaze je prazdna, pro pridani studenta stisknete 1");
 		} else if (ID > prvkyDatabaze.size()-1 || ID < 0) {
@@ -410,7 +416,6 @@ public class Databaze{
 	            for (int znamka : znamky) {
 	            	sumOfMarksTel += znamka;
 	            	numOfMarksTel++;
-	            	System.out.println("secteni znamky");
 	            }
 	        } else if (student instanceof Cybersecurity) {
 	            for (int znamka : znamky) {
@@ -438,5 +443,138 @@ public class Databaze{
 	}
 	
 	// Prace se souborem
+	public void filet() {
+		
+		File soubor = new File("soubor_studentu.txt");
+		if (!soubor.exists()) {
+			try {
+				soubor.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				System.out.println(e.toString());
+			}
+		}
+		
+		System.out.println("Zadejte, jak chcete se soubory pracovat?");
+		System.out.println("[U] Ulozeni zaka do souboru");
+		System.out.println("[L] Nahrani zaka ze souboru");
+		System.out.println("[R] Odstraneni zaka ze souboru");
+		String choice = sc.next();
+		switch (choice) {
+			case "u":
+			case "U":
+				saveToFilet();
+				break;
+				
+			case "l":
+			case "L":
+				loadFromFilet();
+				break;
+			
+			case "r":
+			case "R":
+				removeFromFilet();
+				break;
+				
+			default:
+				System.out.println("Spatny vyber, zkuste to znovu");
+				break;
+		
+		}
+		
+		
+	}
+	
+	//hotovo
+	public void saveToFilet() {
+		for (Student student : prvkyDatabaze) {
+			System.out.println(student.getInfo());
+		}
+		System.out.println("\nZadejte ID studenta, ktereho chcete ulozit do souboru: ");
+		int ID = Main.pouzeCelaCisla(sc);
+		FileWriter fw = null;
+		BufferedWriter out = null;
+		try {
+			fw = new FileWriter("soubor_studentu.txt", true);
+			out = new BufferedWriter(fw);
+			out.write(prvkyDatabaze.get(ID).getName() + "|" + prvkyDatabaze.get(ID).getSurname() + "|" + prvkyDatabaze.get(ID).getBirth() + "|" + prvkyDatabaze.get(ID).getMarks().toString() + "|" + (prvkyDatabaze.get(ID) instanceof Telecommunications ? "t" : "c"));
+			out.newLine();
+		} catch (IOException e) {
+			System.out.println("Soubor  nelze otevřít");
+		} finally {
+			try {
+				if (out != null) out.close();
+	            if (fw != null) fw.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void loadFromFilet() {
+		FileReader fr = null;
+		BufferedReader in = null;
+		int pocetStudentuVSouboru = 0;
+		int cisloRadku = 1;
+		ArrayList<String> celyText = new ArrayList<String>();
+		
+		try {
+			fr = new FileReader("soubor_studentu.txt");
+			in = new BufferedReader(fr);
+			String radek;
+			
+			System.out.println("\nZadejte ID studenta, ktereho chcete nahrat ze souboru: ");
+			while ((radek = in.readLine()) != null) {
+				celyText.add(radek);
+				System.out.println("[" + pocetStudentuVSouboru++ + "] " + radek.replace("|", " "));
+			}
+			
+			int choice = Main.pouzeCelaCisla(sc);
+			
+			if (choice < 0 || choice >= pocetStudentuVSouboru-1) {
+		        System.out.println("Neplatná volba.");
+		        return;
+		    }
 
+			String[] radekArr = celyText.get(choice).split("\\|");
+					
+			String name = radekArr[0];
+			String Surname = radekArr[1];
+			int birth = Integer.parseInt(radekArr[2]);
+			String marksStr = radekArr[3];
+					
+			if (radekArr[4].equals("t")) {
+		        prvkyDatabaze.add(new Telecommunications(pocetStudentu++, name, Surname, birth));
+		        
+		    } else if (radekArr[4].equals("c")) {
+		       	prvkyDatabaze.add(new Cybersecurity(pocetStudentu++, name, Surname, birth));
+		    }
+			
+			marksStr = marksStr.replaceAll("\\[|\\]", "").trim();
+		    if (!marksStr.isEmpty()) {
+		        for (String s : marksStr.split(",")) {
+		            prvkyDatabaze.get(pocetStudentu-1).setMark(Integer.parseInt(s.trim()));
+		        }
+		    }	
+		    
+		    System.out.println("Student " + prvkyDatabaze.get(pocetStudentu-1).getInfo() + " byl pridan!");
+		} catch(IOException e) {
+			System.out.println("Soubor  nelze otevřít");
+		} finally {
+			try {
+				if (in != null) in.close();
+	            if (fr != null) fr.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	
+	
+	public void removeFromFilet() {
+		
+	}
 }

@@ -66,9 +66,7 @@ public class Main {
 				
 				case 4: //TODO Vypis podle ID
 					System.out.println("4 - Vypis informaci o studentovi podle ID");
-					System.out.print("Zadejte ID studenta: ");
-					int ID4 = sc.nextInt();
-					newDatabase.vypisDatabazi(ID4);
+					newDatabase.vypisDatabazi();
 					break;
 					
 				case 5: //TODO Dovednost studetna podle ID
@@ -95,7 +93,7 @@ public class Main {
 					
 				case 9: //TODO Prace se souborem
 					System.out.println("9 - Prace se souborem");
-					//newDatabase.filet();
+					newDatabase.filet();
 					break;
 					
 				case 0: //TODO Odstraneni ze souboru
