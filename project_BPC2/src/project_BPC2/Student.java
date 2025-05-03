@@ -45,10 +45,18 @@ public class Student {
 	}
 	
 	public String getInfo() {
-		return ("ID: " + ID + " Name: " + name + " Surname: " + surname + " Birth: " + birth);
+		return ("ID: " + ID + " Name: " + name + " Surname: " + surname + " Birth: " + birth + " Studijni prumer: " + getAvg());
 	}
 	
 	public void skill() {
+	}
+	
+	public float getAvg() {
+		float markSum = 0f;
+		for (float mark : marks) {
+			markSum += mark;
+		}
+		return markSum/marks.size();
 	}
 	
 }

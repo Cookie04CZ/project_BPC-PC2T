@@ -1,5 +1,6 @@
 package project_BPC2;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileWriter;
@@ -11,7 +12,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.SQLException;
 
-public class Databaze {
+public class Databaze{
 	private Scanner sc;
 	private ArrayList<Student> prvkyDatabaze;
 	private int pocetStudentu = 0;
@@ -366,56 +367,12 @@ public class Databaze {
 	    }
 	}
 	
-	// SERAZENI STUDENTU PODLE ABECEDY
 	public void studentSorting() {
-
-		String dotaz = "SELECT * FROM students";
-	    ArrayList<Student> seznamStudentu = new ArrayList<>();
-
-	    try (Statement prikaz = conn.createStatement();
-	         ResultSet vysledek = prikaz.executeQuery(dotaz)) {
-
-	        while (vysledek.next()) {
-	            int id = vysledek.getInt("idstudents");
-	            String jmeno = vysledek.getString("name");
-	            String prijmeni = vysledek.getString("surname");
-	            int narozeni = vysledek.getInt("birth");
-	            String obor = vysledek.getString("specs");
-
-	            Student student;
-	            if (obor.equalsIgnoreCase("t")) {
-	                student = new Telecommunications(id, jmeno, prijmeni, narozeni);
-	            } else {
-	                student = new Cybersecurity(id, jmeno, prijmeni, narozeni);
-	            }
-
-	            seznamStudentu.add(student);
-	        }
-
-	        // Ruční řazení podle příjmení (bublinkové třídění)
-	        for (int i = 0; i < seznamStudentu.size() - 1; i++) {
-	            for (int j = 0; j < seznamStudentu.size() - i - 1; j++) {
-	                String prijmeni1 = seznamStudentu.get(j).getSurname().toLowerCase();
-	                String prijmeni2 = seznamStudentu.get(j + 1).getSurname().toLowerCase();
-
-	                if (prijmeni1.compareTo(prijmeni2) > 0) {
-	                    Student temp = seznamStudentu.get(j);
-	                    seznamStudentu.set(j, seznamStudentu.get(j + 1));
-	                    seznamStudentu.set(j + 1, temp);
-	                }
-	            }
-	        }
-	        
-	        System.out.println("Studenti serazeni podle prijmeni:");
-	        
-	        for (Student student : seznamStudentu) {
-	        	System.out.println("ID: " + student.getID() + " Prijmeni: " + student.getSurname());
-	        }
-
-	    } catch (SQLException e) {
-	        System.out.println("Chyba při načítání studentů: " + e.getMessage());
-	    }
-	    
+		ArrayList<Student> toSort = prvkyDatabaze;
+		prvkyDatabaze.sort(Comparator.comparing(Student::getSurname, String.CASE_INSENSITIVE_ORDER));
+		for (Student student : toSort) {
+			System.out.println(student.getInfo());
+		}
 	}
 	
 	// Pocitani studentu ve skupince
