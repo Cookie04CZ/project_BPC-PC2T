@@ -1,0 +1,2 @@
+Pepa|Zdepa|5|[1, 2, 1]|t
+Franta|pepa|1|[]|c
