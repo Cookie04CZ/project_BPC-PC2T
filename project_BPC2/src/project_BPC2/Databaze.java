@@ -516,7 +516,6 @@ public class Databaze{
 		FileReader fr = null;
 		BufferedReader in = null;
 		int pocetStudentuVSouboru = 0;
-		int cisloRadku = 1;
 		ArrayList<String> celyText = new ArrayList<String>();
 		
 		try {
