@@ -214,7 +214,6 @@ public class Databaze{
 		try {
 			conn.createStatement().executeUpdate("DELETE FROM marks");
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		String insertMark = "INSERT INTO marks (mark, students_idstudents) VALUES (?, ?);";
@@ -374,8 +373,8 @@ public class Databaze{
 	}
 	
 	public void studentSorting() {
-		ArrayList<Student> toSort = prvkyDatabaze;
-		prvkyDatabaze.sort(Comparator.comparing(Student::getSurname, String.CASE_INSENSITIVE_ORDER));
+		ArrayList<Student> toSort = new ArrayList<Student>(prvkyDatabaze);
+		toSort.sort(Comparator.comparing(Student::getSurname, String.CASE_INSENSITIVE_ORDER));
 		for (Student student : toSort) {
 			System.out.println(student.getInfo());
 		}
@@ -450,7 +449,6 @@ public class Databaze{
 			try {
 				soubor.createNewFile();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				System.out.println(e.toString());
 			}
 		}
@@ -500,13 +498,12 @@ public class Databaze{
 			out.write(prvkyDatabaze.get(ID).getName() + "|" + prvkyDatabaze.get(ID).getSurname() + "|" + prvkyDatabaze.get(ID).getBirth() + "|" + prvkyDatabaze.get(ID).getMarks().toString() + "|" + (prvkyDatabaze.get(ID) instanceof Telecommunications ? "t" : "c"));
 			out.newLine();
 		} catch (IOException e) {
-			System.out.println("Soubor  nelze otevřít");
+			System.out.println("Soubor nelze otevřít");
 		} finally {
 			try {
 				if (out != null) out.close();
 	            if (fw != null) fw.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -531,8 +528,8 @@ public class Databaze{
 			
 			int choice = Main.pouzeCelaCisla(sc);
 			
-			if (choice < 0 || choice >= pocetStudentuVSouboru-1) {
-		        System.out.println("Neplatná volba.");
+			if (choice < 0 || choice >= pocetStudentuVSouboru) {
+		        System.out.println("Neplatna volba.");
 		        return;
 		    }
 
@@ -559,13 +556,12 @@ public class Databaze{
 		    
 		    System.out.println("Student " + prvkyDatabaze.get(pocetStudentu-1).getInfo() + " byl pridan!");
 		} catch(IOException e) {
-			System.out.println("Soubor  nelze otevřít");
+			System.out.println("Soubor  nelze otevrit");
 		} finally {
 			try {
 				if (in != null) in.close();
 	            if (fr != null) fr.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -574,6 +570,58 @@ public class Databaze{
 	
 	
 	public void removeFromFilet() {
-		
+	    FileReader fr = null;
+	    BufferedReader in = null;
+	    ArrayList<String> celyText = new ArrayList<>();
+	    int pocetStudentuVSouboru = 0;
+
+	    try {
+	        fr = new FileReader("soubor_studentu.txt");
+	        in = new BufferedReader(fr);
+	        String radek;
+
+	        while ((radek = in.readLine()) != null) {
+	            celyText.add(radek);
+	            System.out.println("[" + pocetStudentuVSouboru++ + "] " + radek.replace("|", " "));
+	        }
+
+	        if (celyText.isEmpty()) {
+	            System.out.println("Soubor je prazdny.");
+	            return;
+	        }
+
+	        System.out.println("\nZadejte ID studenta, ktereho chcete odstranit ze souboru:");
+	        int choice = Main.pouzeCelaCisla(sc);
+
+	        if (choice < 0 || choice >= celyText.size()) {
+	            System.out.println("Neplatna volba.");
+	            return;
+	        }
+
+	        celyText.remove(choice);
+
+	        FileWriter fw = new FileWriter("soubor_studentu.txt", false);
+	        BufferedWriter out = new BufferedWriter(fw);
+
+	        for (String line : celyText) {
+	            out.write(line);
+	            out.newLine();
+	        }
+
+	        System.out.println("Student byl odstranen ze souboru.");
+
+	        out.close();
+	        fw.close();
+
+	    } catch (IOException e) {
+	        System.out.println("Chyba se souborem");
+	    } finally {
+	        try {
+	            if (in != null) in.close();
+	            if (fr != null) fr.close();
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	    }
 	}
 }
