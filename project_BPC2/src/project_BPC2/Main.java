@@ -56,9 +56,7 @@ public class Main {
 
 				case 2: //TODO Zadani znamky studentovi+
 					System.out.println("2 - Zadani znamky studentovi");
-					System.out.print("Zadejte ID studenta: ");
-					int ID2 = sc.nextInt();
-					newDatabase.addMarks(ID2);
+					newDatabase.addMarks();
 					break;
 					
 				case 3: //TODO Terminace studenta z databaze
@@ -82,18 +80,22 @@ public class Main {
 					
 				case 6: //TODO Vypis vsech se razenim
 					System.out.println("6 - Vypis vsech studentu razeny dle prijmeni");
+					newDatabase.studentSorting();
 					break;
 					
 				case 7: //TODO Vypis studijnich prumeru
 					System.out.println("7 - Vypis obecneho studijniho prumeru");
+					newDatabase.studPrumer();
 					break;
 					
 				case 8: //TODO Vypis poctu studentu
 					System.out.println("8 - Vypis poctu studentu ve skupinach");
+					newDatabase.numInSpec();
 					break;
 					
-				case 9: //TODO Nacitani ze souboru
+				case 9: //TODO Prace se souborem
 					System.out.println("9 - Prace se souborem");
+					//newDatabase.filet();
 					break;
 					
 				case 0: //TODO Odstraneni ze souboru
@@ -128,4 +130,5 @@ public class Main {
 		}
 		return cislo;
 	}
+	
 }

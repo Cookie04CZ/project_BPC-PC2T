@@ -1,6 +1,9 @@
 package project_BPC2;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -62,14 +65,19 @@ public class Databaze {
 		}
 	}
 	
-	public void addMarks(int ID) {
+	public void addMarks() {
+		for (Student student : prvkyDatabaze) {
+			System.out.println(student.getInfo());
+		}
+		System.out.println("Zadejte ID studenta, kteremu chcete pridat znamku:");
+	    int idToRemove = Main.pouzeCelaCisla(sc);
 		System.out.println("Zadejte znamku: ");
 		int mark = sc.nextInt();
 		if (mark < 1 || mark > 5) {
 			System.out.println("Znamky mohou byt pouze 1 - 5");
 		} else {
-			prvkyDatabaze.get(ID).setMark(mark);
-			System.out.println(prvkyDatabaze.get(ID).getMarks().toString());
+			prvkyDatabaze.get(idToRemove).setMark(mark);
+			System.out.println(prvkyDatabaze.get(idToRemove).getMarks().toString());
 		}
 	}
 	
@@ -358,4 +366,120 @@ public class Databaze {
 	    }
 	}
 	
+	// SERAZENI STUDENTU PODLE ABECEDY
+	public void studentSorting() {
+
+		String dotaz = "SELECT * FROM students";
+	    ArrayList<Student> seznamStudentu = new ArrayList<>();
+
+	    try (Statement prikaz = conn.createStatement();
+	         ResultSet vysledek = prikaz.executeQuery(dotaz)) {
+
+	        while (vysledek.next()) {
+	            int id = vysledek.getInt("idstudents");
+	            String jmeno = vysledek.getString("name");
+	            String prijmeni = vysledek.getString("surname");
+	            int narozeni = vysledek.getInt("birth");
+	            String obor = vysledek.getString("specs");
+
+	            Student student;
+	            if (obor.equalsIgnoreCase("t")) {
+	                student = new Telecommunications(id, jmeno, prijmeni, narozeni);
+	            } else {
+	                student = new Cybersecurity(id, jmeno, prijmeni, narozeni);
+	            }
+
+	            seznamStudentu.add(student);
+	        }
+
+	        // Ruční řazení podle příjmení (bublinkové třídění)
+	        for (int i = 0; i < seznamStudentu.size() - 1; i++) {
+	            for (int j = 0; j < seznamStudentu.size() - i - 1; j++) {
+	                String prijmeni1 = seznamStudentu.get(j).getSurname().toLowerCase();
+	                String prijmeni2 = seznamStudentu.get(j + 1).getSurname().toLowerCase();
+
+	                if (prijmeni1.compareTo(prijmeni2) > 0) {
+	                    Student temp = seznamStudentu.get(j);
+	                    seznamStudentu.set(j, seznamStudentu.get(j + 1));
+	                    seznamStudentu.set(j + 1, temp);
+	                }
+	            }
+	        }
+	        
+	        System.out.println("Studenti serazeni podle prijmeni:");
+	        
+	        for (Student student : seznamStudentu) {
+	        	System.out.println("ID: " + student.getID() + " Prijmeni: " + student.getSurname());
+	        }
+
+	    } catch (SQLException e) {
+	        System.out.println("Chyba při načítání studentů: " + e.getMessage());
+	    }
+	    
+	}
+	
+	// Pocitani studentu ve skupince
+	public void numInSpec() {
+	    int numTel = 0;
+	    int numCyb = 0;
+
+	    for (Student student : prvkyDatabaze) {
+	        if (student instanceof Telecommunications) {
+	            numTel++;
+	        } else if (student instanceof Cybersecurity) {
+	            numCyb++;
+	        }
+	    }
+
+	    System.out.println("Počet studentů podle oboru:");
+	    System.out.println("Telekomunikace: " + numTel);
+	    System.out.println("Kyberbezpečnost: " + numCyb);
+	}
+	
+	// Obecny studijni prumer
+	public void studPrumer() {
+	    int sumOfMarksTel = 0;
+	    int numOfMarksTel = 0;
+	    int sumOfMarksCyb = 0;
+	    int numOfMarksCyb = 0;
+	    double avgTel = 0;
+	    double avgCyb = 0;
+
+	    for (Student student : prvkyDatabaze) {
+	        ArrayList<Integer> znamky = student.getMarks();
+	        if (znamky.isEmpty()) continue;
+
+	        if (student instanceof Telecommunications) {
+	            for (int znamka : znamky) {
+	            	sumOfMarksTel += znamka;
+	            	numOfMarksTel++;
+	            	System.out.println("secteni znamky");
+	            }
+	        } else if (student instanceof Cybersecurity) {
+	            for (int znamka : znamky) {
+	            	sumOfMarksCyb += znamka;
+	            	numOfMarksCyb++;
+	            }
+	        }
+	    }
+	    System.out.println(sumOfMarksTel +" " + numOfMarksTel);
+	    if (numOfMarksTel > 0) {
+	    	avgTel = (sumOfMarksTel / numOfMarksTel);
+	    	System.out.println("deleni");
+	    } else {
+	    	avgTel = 0;
+	    }
+	    if (numOfMarksCyb > 0) {
+	    	avgCyb = sumOfMarksCyb / numOfMarksCyb;
+	    } else {
+	    	avgCyb = 0;
+	    }
+
+		System.out.printf("Studijni prumer (Telekomunikace): " + avgTel + "\n");
+	    System.out.printf("Studijni prumer (Kyberbezpecnost): " + avgCyb);
+	  
+	}
+	
+	// Prace se souborem
+
 }
