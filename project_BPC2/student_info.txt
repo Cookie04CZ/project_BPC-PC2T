@@ -1,0 +1,5 @@
+ID: 1
+Jméno: Franta
+Příjmení: pepa
+Rok narození: 1
+Známky: []
